@@ -1,0 +1,392 @@
+;
+(function($){
+	'use strict';
+
+	var newDate = new Date(),
+	currentYear = newDate.getFullYear(),
+	currentMonth = newDate.getMonth(),
+	currentDate = newDate.getDate(),
+
+	// Days name label in order
+	daysLabels = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
+
+	// Month name labels in order
+	monthsLabels = ['January', 'February', 'March', 'April',
+                     	'May', 'June', 'July', 'August', 'September',
+                     	'October', 'November', 'December'],	
+
+	//Month is 1 based
+	daysInMonth = function(month,year) {
+	    return new Date(year, month, 0).getDate();
+	}
+
+	var AppendDate = {
+		setTable : function( $datePicker, _this, options ){
+			var $table = $("<table/>", {class: "datePicker-calendar",});
+			$datePicker.append($table);
+			$table = AppendDate.setDays( $table );
+			$table = AppendDate.setDates( $table, _this, options );
+			return $datePicker;
+		},
+
+		setValue : function( _this, that, options ){
+			if( options.multipleDate ){
+				if( $(_this).val() !== '' )
+				{
+					$(_this).val( $(_this).val() + ', ' + $(that).attr('date-value') );
+				}
+
+				else{
+					$(_this).val( $(that).attr('date-value') );
+				}
+				
+			}
+
+			else{
+				$(_this).val( $(that).attr('date-value') );
+				DatePicker.removeDatePicker(_this);
+			}
+		},
+
+		setHeading: function( $datePicker, _this, options ){
+			var $headingWrapper = $("<div/>", {class: "calendar-heading"}),
+			$monthDiv = $("<div/>", {class: "month-title"}),
+			$nextDiv = $("<div/>", {class: "next", title: "Next Month"}),
+			$prevDiv = $("<div/>", {class: "prev", title: "Previous Month"});		    
+
+			$monthDiv.text( monthsLabels[currentMonth] + ' ' + currentYear );
+
+			$headingWrapper.append($prevDiv);
+			$headingWrapper.append($monthDiv);
+			$headingWrapper.append($nextDiv);
+
+			$nextDiv.click(function(e){
+				$datePicker.empty();
+
+				if(currentMonth >= 11){
+					currentMonth = 0;
+					currentYear += 1;
+				}
+				else{
+					currentMonth += 1;
+				}
+
+				$datePicker = AppendDate.setHeading($datePicker, _this, options);
+				$datePicker = AppendDate.setTable($datePicker, _this, options);
+			});
+
+			$prevDiv.click(function(){
+
+				$datePicker.empty();
+
+				if(currentMonth <=0){
+					currentMonth = 11;
+					currentYear -= 1;
+				}
+				else{
+					currentMonth -= 1;
+				}
+
+				$datePicker = AppendDate.setHeading($datePicker, _this, options);
+				$datePicker = AppendDate.setTable($datePicker, _this, options);
+
+			});
+
+			return( $datePicker.append( $headingWrapper ) );
+		},
+
+		setDates: function( $table , _this, options ){
+			var fullStartDate,
+			fullEndDate;
+
+			if ( options.startDate ) {
+				fullStartDate = options.startDate.split('/');
+			};
+
+			if ( options.endDate ){
+				fullEndDate = options.endDate.split('/');
+			};
+
+			for (var i = 1; i <= (daysInMonth(currentMonth+1, currentYear)); i) {
+				var $tr = $("<tr/>", {class: "row-" + i,}),
+				firstDayOfMonth = new Date(currentYear, currentMonth, 1).getDay();
+
+				for (var j = 1; j <=7; j++,i++) {
+					var	$td = $("<td/>",{class: 'curr-month-date'});	
+
+					//Adding blank dates for blank days of month
+					if( i === 1 ){
+						var previousMonthTotalDate = daysInMonth(currentMonth, currentYear),
+						prevMonth = currentMonth,
+						prevYear = currentYear;
+
+						if(currentMonth <= 0){
+							prevMonth = 12,
+							prevYear = currentYear - 1 ;
+						}
+
+						for (var k = firstDayOfMonth-1; k >=0; k--) {
+
+							var	$prevMonthDate = $("<td/>",{class: 'prev-month-date'});
+
+							// For Start Date
+							if( options.startDate )
+							{
+								if( prevYear < fullStartDate[2] ){
+									$prevMonthDate.addClass('disabled');
+								}
+
+								else if( prevYear == fullStartDate[2] ){
+									if( prevMonth < fullStartDate[1] ){
+										$prevMonthDate.addClass('disabled');
+									}
+
+									else if( prevMonth == fullStartDate[1] ){
+										if( (parseInt(previousMonthTotalDate)-k) < fullStartDate[0] ){
+											$prevMonthDate.addClass('disabled');
+										}
+									}
+								}
+							}
+
+							// For End date
+							if( options.endDate )
+							{
+								if( prevYear > fullEndDate[2] ){
+									$prevMonthDate.addClass('disabled');
+								}
+
+								else if( prevYear == fullEndDate[2] ){
+									if( prevMonth > fullEndDate[1] ){
+										$prevMonthDate.addClass('disabled');
+									}
+
+									else if( prevMonth == fullEndDate[1] ){
+										if( (parseInt(previousMonthTotalDate)-k) > fullEndDate[0] ){
+											$prevMonthDate.addClass('disabled');
+										}
+									}
+								}
+							}
+
+							$prevMonthDate.attr('date-value', (parseInt(previousMonthTotalDate)-k) + '/' + (prevMonth) + '/' + prevYear);
+
+							$prevMonthDate.text( previousMonthTotalDate-k );
+							$tr.append($prevMonthDate);
+							j++;
+
+							$prevMonthDate.on('click',function(e){
+								if ( !$(e.target).hasClass('disabled') ){
+									AppendDate.setValue( _this, this, options );	
+								}
+							});
+						};
+					}
+
+					else if( i> daysInMonth(currentMonth+1, currentYear) ){
+						var count = 1,
+						nextMonth = currentMonth + 2,
+						nextYear = currentYear;
+
+						if(currentMonth >= 11){
+							nextMonth = 1,
+							nextYear = currentYear + 1 ;
+						}
+
+						for (var k = $tr.children().length; k < 7; k++,count++) {
+							var	$nextMonthDate = $("<td/>",{class: 'next-month-date'});
+
+							// For Start Date
+							if( options.startDate )
+							{
+								if( nextYear < fullStartDate[2] ){
+									$nextMonthDate.addClass('disabled');
+								}
+
+								else if( nextYear == fullStartDate[2] ){
+									if( nextMonth < fullStartDate[1] ){
+										$nextMonthDate.addClass('disabled');
+									}
+
+									else if( nextMonth == fullStartDate[1] ){
+										if( count < fullStartDate[0] ){
+											$nextMonthDate.addClass('disabled');
+										}
+									}
+								}
+							}
+
+							// For End date
+							if( options.endDate )
+							{
+								if( nextYear > fullEndDate[2] ){
+									$nextMonthDate.addClass('disabled');
+								}
+
+								else if( nextYear == fullEndDate[2] ){
+									if( nextMonth > fullEndDate[1] ){
+										$nextMonthDate.addClass('disabled');
+									}
+
+									else if( nextMonth == fullEndDate[1] ){
+										if( count > fullEndDate[0] ){
+											$nextMonthDate.addClass('disabled');
+										}
+									}
+								}
+							}
+
+							$nextMonthDate.attr('date-value', (count + '/' + (nextMonth) + '/' + nextYear));
+
+							$nextMonthDate.text( count );
+							$tr.append($nextMonthDate);
+							j++;
+
+							$nextMonthDate.on('click',function(e){
+								if ( !$(e.target).hasClass('disabled') ){
+									AppendDate.setValue( _this, this, options );	
+								}							
+								
+							});
+						};
+						break;
+					}
+
+					// Today class for today date
+					if (i === currentDate) {
+						var dateCheck = new Date();
+
+						if(currentMonth === dateCheck.getMonth() && currentYear === dateCheck.getFullYear())
+							$td.addClass('today');
+					}
+
+					// Red class for saturday
+					if( j === 7 ){
+						$td.addClass('red');
+					}
+
+					// For Start Date
+					if( options.startDate )
+					{
+						if( currentYear < fullStartDate[2] ){
+							$td.addClass('disabled');
+						}
+
+						else if( currentYear == fullStartDate[2] ){
+							if( (parseInt(currentMonth)+1) < fullStartDate[1] ){
+								$td.addClass('disabled');
+							}
+
+							else if( (parseInt(currentMonth)+1) == fullStartDate[1] ){
+								if( i < fullStartDate[0] ){
+									$td.addClass('disabled');
+								}
+							}
+						}
+					}
+
+					// For End date
+					if( options.endDate )
+					{
+						if( currentYear > fullEndDate[2] ){
+							$td.addClass('disabled');
+						}
+
+						else if( currentYear == fullEndDate[2] ){
+							if( (parseInt(currentMonth)+1) > fullEndDate[1] ){
+								$td.addClass('disabled');
+							}
+
+							else if( (parseInt(currentMonth)+1) == fullEndDate[1] ){
+								if( i > fullEndDate[0] ){
+									$td.addClass('disabled');
+								}
+							}
+						}
+					}
+
+					$td.attr('date-value', i + '/' + (parseInt(currentMonth)+1) + '/' + currentYear);
+					$td.text(i);
+					$td.click(function(e){
+						if ( !$(e.target).hasClass('disabled') ){
+							AppendDate.setValue( _this, this, options );	
+						}								
+					});
+					$tr.append($td);
+				}
+
+				$table.append($tr);
+			};
+			return($table);
+		},
+		setDays: function( $table ){
+			var $tr = $("<tr/>", {class: "col",});
+
+			for (var i = 0; i < daysLabels.length; i++) {
+				if(i == 6){
+					var $th = $("<th/>",{class:'red'});
+					$th.text(daysLabels[i]);
+					$tr.append($th);
+				}
+				else{
+					var $th = $("<th/>");
+					$th.text(daysLabels[i]);
+					$tr.append($th);
+				}
+				
+			};
+
+			$table.append($tr);
+			return($table);
+		}
+	}
+
+	var DatePicker = {
+		setDatePicker : function(_this, options ){
+			var $datePicker = $("<div/>", {class: "datePicker"});
+
+			$datePicker = AppendDate.setHeading($datePicker, _this, options);
+			$datePicker = AppendDate.setTable($datePicker, _this, options);
+
+			$datePicker.insertAfter($(_this));
+
+		  	$datePicker.animate({
+				opacity:1
+			},300);
+		},
+		removeDatePicker : function(_this){
+			$(_this).next('.datePicker').animate({
+				opacity:0
+			},150,function(){
+				$(_this).next('.datePicker').remove();
+			});
+		}
+	}
+
+	// Main function
+	$.fn.datePick = function( options ){
+		var _this = this,
+		defaultOption = {
+          multipleDate : false
+        },
+        allOptions = $.extend(defaultOption, options);
+
+		$(_this).focus(function(){
+			if( $(_this).next('.datePicker').length <= 0 ){
+				DatePicker.setDatePicker( _this, allOptions );
+			}
+		});
+
+		$(document).click(function(e){
+
+			var container = $(".datePicker");
+		    if (!$(_this).is(e.target) && !container.is(e.target) // if the target of the click isn't the container...
+		        && container.find('.' + e.target.classList[0]).length === 0 
+		        && $(container).has(e.target).length === 0) // ... nor a descendant of the container
+		    {
+		        DatePicker.removeDatePicker(_this);
+		    }
+		});
+	}
+
+}( jQuery ));
