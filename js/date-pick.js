@@ -446,7 +446,11 @@
 			$datePicker = AppendDate.setHeading($datePicker, _this, options);
 			$datePicker = AppendDate.setTable($datePicker, _this, options);
 
+			$datePicker.addClass('animated ' + options.animation);
 			$datePicker.insertAfter($(_this));
+			$(_this).parent().css({
+				position: 'relative'
+			});
 
 		  	$datePicker.animate({
 				opacity:1
@@ -475,7 +479,8 @@
 		var _this = this,
 		defaultOption = {
           multipleDate : false,
-		  format: 'dd/mm/yy'	
+		  format: 'dd/mm/yy',
+		  animation: 'flipInY'	
         },
         allOptions = $.extend(defaultOption, options);
 
