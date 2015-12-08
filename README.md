@@ -3,12 +3,12 @@ Its a date picker with custom options
 
 1.How to use:
 
-	i. Just include date-picker.css and fonts.css and date-pick.js to your HTML file
-	ii. Copy fonts folder to your project
-	iii. Copy images folder to your project
-	iv. Call datePick with your desired element selector
-		eg: $('#yourSelector').datePick()
-	v. And its ready to use
+	1. Just include date-picker.css and fonts.css and date-pick.js to your HTML file
+	2. Copy fonts folder to your project for custom fonts
+	3. Copy images folder to your project
+	4. Call datePick with your desired element selector
+		eg: $('#yourSelector').datePick();
+	5. And its ready to use
 
 2.Features:
 
