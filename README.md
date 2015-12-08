@@ -3,7 +3,7 @@ Its a date picker with custom options
 
 USAGE
 
-	1. Just include date-picker.css and fonts.css and date-pick.js to your HTML file
+	1. Just include date-picker.css, fonts.css, animation.css and date-pick.js to your HTML file
 	2. Copy fonts folder to your project for custom fonts
 	3. Copy images folder to your project
 	4. Call datePick with your desired element selector
