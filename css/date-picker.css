@@ -105,6 +105,7 @@ table{
 
 .datePicker-calendar tr td.disabled{
 	cursor: not-allowed;
+	color: #D8D6D6;
 }
 
 .datePicker-calendar tr td:hover{

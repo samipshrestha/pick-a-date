@@ -14,13 +14,28 @@
 	monthsLabels = ['January', 'February', 'March', 'April',
                      	'May', 'June', 'July', 'August', 'September',
                      	'October', 'November', 'December'],	
+ 	// Min Month name labels in order
+	monthsLabelsMin = ['Jan', 'Feb', 'Mar', 'Apr',
+                     	'May', 'Jun', 'Jul', 'Aug', 'Sep',
+                     	'Oct', 'Nov', 'Dec'],	
 
-	//Month is 1 based
+	/**
+	 * [daysInMonth calculates total days in a month]
+	 * @param  {[int]} month [month value]
+	 * @param  {[int]} year  [year valur]
+	 * @return {[int]}       [returns total days]
+	 */
 	daysInMonth = function(month,year) {
 	    return new Date(year, month, 0).getDate();
 	}
 
 	var AppendDate = {
+		/**
+		 * [setTable sets table to be appended]
+		 * @param {[DOM element]} $datePicker [datepicker element]
+		 * @param {[DOM element]} _this       [calling element]
+		 * @param {[object]} options     [all options]
+		 */
 		setTable : function( $datePicker, _this, options ){
 			var $table = $("<table/>", {class: "datePicker-calendar",});
 			$datePicker.append($table);
@@ -28,26 +43,103 @@
 			$table = AppendDate.setDates( $table, _this, options );
 			return $datePicker;
 		},
+		/**
+		 * [getDateFormat description]
+		 * @param  {[DOM element]} that    [clicked date element]
+		 * @param  {[object]} options [all options]
+		 * @return {[string]}         [date in format]
+		 */
+		getDateFormat : function( that, options){
+			var dateFormat,
+			fullDate = $(that).attr('date-value').split('/');
 
-		setValue : function( _this, that, options ){
-			if( options.multipleDate ){
-				if( $(_this).val() !== '' )
-				{
-					$(_this).val( $(_this).val() + ', ' + $(that).attr('date-value') );
+			if( options.format == 'dd/mm/yy' ){
+
+				if(fullDate[0]>=1 && fullDate[0]<=9){
+					fullDate[0] = '0'+ fullDate[0];
 				}
 
-				else{
-					$(_this).val( $(that).attr('date-value') );
+				if(fullDate[1]>=1 && fullDate[1]<=9){
+					fullDate[1] = '0'+ fullDate[1];
 				}
-				
+				dateFormat = fullDate[0] + '/' + fullDate[1] + '/' + fullDate[2];
+				return dateFormat;
+			}
+
+			else if( options.format == 'mm/dd/yy' ){
+				if(fullDate[0]>=1 && fullDate[0]<=9){
+					fullDate[0] = '0'+ fullDate[0];
+				}
+
+				if(fullDate[1]>=1 && fullDate[1]<=9){
+					fullDate[1] = '0'+ fullDate[1];
+				}
+
+				dateFormat = fullDate[1] + '/' + fullDate[0] + '/' + fullDate[2]  ;
+				return dateFormat;
+			}
+
+			else if( options.format == 'yy-mm-dd' ){
+
+				if(fullDate[0]>=1 && fullDate[0]<=9){
+					fullDate[0] = '0'+ fullDate[0];
+				}
+
+				if(fullDate[1]>=1 && fullDate[1]<=9){
+					fullDate[1] = '0'+ fullDate[1];
+				}
+
+				dateFormat = fullDate[2] + '-' + fullDate[1] + '-' + fullDate[0]  ;
+				return dateFormat;
+			}
+
+			else if( options.format == 'd M, yy' ){
+				dateFormat = fullDate[0] + ' ' + monthsLabelsMin[ parseInt( fullDate[1] ) - 1]  + ', ' + fullDate[2]  ;
+				return dateFormat;
+			}
+
+			else if( options.format == 'd MM, yy' ){
+				dateFormat = fullDate[0] + ' ' + monthsLabels[ parseInt( fullDate[1] ) - 1]  + ', ' + fullDate[2]  ;
+				return dateFormat;
 			}
 
 			else{
-				$(_this).val( $(that).attr('date-value') );
+				console.log('The defined date format is not supported.');
+				dateFormat = '';
+				return dateFormat;
+			}
+
+		},
+		/**
+		 * [setValue returns value to calling element]
+		 * @param {[DOM element]} _this   [calling element]
+		 * @param {[DOM element]} that    [clicked date element]
+		 * @param {[object]} options [all options]
+		 */
+		setValue : function( _this, that, options ){
+			var dateInFormat = AppendDate.getDateFormat( that, options);
+			if( options.multipleDate ){
+				if( $(_this).val() !== '' )
+				{
+					$(_this).val( $(_this).val() + ', ' + dateInFormat );
+				}
+
+				else{
+					$(_this).val( dateInFormat );
+				}
+			}
+
+			else{
+				$(_this).val( dateInFormat );
 				DatePicker.removeDatePicker(_this);
 			}
 		},
-
+		/**
+		 * [setHeading sets month and year heading of date picker]
+		 * @param {[DOM element]} $datePicker [datepicker element]
+		 * @param {[DOM elemnt]} _this       [calling element]
+		 * @param {[object]} options     [all options setting]
+		 */
 		setHeading: function( $datePicker, _this, options ){
 			var $headingWrapper = $("<div/>", {class: "calendar-heading"}),
 			$monthDiv = $("<div/>", {class: "month-title"}),
@@ -95,16 +187,22 @@
 			return( $datePicker.append( $headingWrapper ) );
 		},
 
+		/**
+		 * [setDates sets dates in datePicker]
+		 * @param {[DOM elmemt]} $table  [table in which dates are to be set]
+		 * @param {[DOM element]} _this   [calling elemnt]
+		 * @param {[object]} options [all options available]
+		 */
 		setDates: function( $table , _this, options ){
 			var fullStartDate,
 			fullEndDate;
 
-			if ( options.startDate ) {
-				fullStartDate = options.startDate.split('/');
+			if ( options.minDate ) {
+				fullStartDate = options.minDate.split('/');
 			};
 
-			if ( options.endDate ){
-				fullEndDate = options.endDate.split('/');
+			if ( options.maxDate ){
+				fullEndDate = options.maxDate.split('/');
 			};
 
 			for (var i = 1; i <= (daysInMonth(currentMonth+1, currentYear)); i) {
@@ -130,7 +228,7 @@
 							var	$prevMonthDate = $("<td/>",{class: 'prev-month-date'});
 
 							// For Start Date
-							if( options.startDate )
+							if( options.minDate )
 							{
 								if( prevYear < fullStartDate[2] ){
 									$prevMonthDate.addClass('disabled');
@@ -150,7 +248,7 @@
 							}
 
 							// For End date
-							if( options.endDate )
+							if( options.maxDate )
 							{
 								if( prevYear > fullEndDate[2] ){
 									$prevMonthDate.addClass('disabled');
@@ -197,7 +295,7 @@
 							var	$nextMonthDate = $("<td/>",{class: 'next-month-date'});
 
 							// For Start Date
-							if( options.startDate )
+							if( options.minDate )
 							{
 								if( nextYear < fullStartDate[2] ){
 									$nextMonthDate.addClass('disabled');
@@ -217,7 +315,7 @@
 							}
 
 							// For End date
-							if( options.endDate )
+							if( options.maxDate )
 							{
 								if( nextYear > fullEndDate[2] ){
 									$nextMonthDate.addClass('disabled');
@@ -266,7 +364,7 @@
 					}
 
 					// For Start Date
-					if( options.startDate )
+					if( options.minDate )
 					{
 						if( currentYear < fullStartDate[2] ){
 							$td.addClass('disabled');
@@ -286,7 +384,7 @@
 					}
 
 					// For End date
-					if( options.endDate )
+					if( options.maxDate )
 					{
 						if( currentYear > fullEndDate[2] ){
 							$td.addClass('disabled');
@@ -319,6 +417,10 @@
 			};
 			return($table);
 		},
+		/**
+		 * [setDays sets day in datePicker]
+		 * @param {[DOM element]} $table [table in which day is to be set]
+		 */
 		setDays: function( $table ){
 			var $tr = $("<tr/>", {class: "col",});
 
@@ -342,6 +444,11 @@
 	}
 
 	var DatePicker = {
+		/**
+		 * [setDatePicker sets datepicker layout to be appended]
+		 * @param {[DOM element]} _this   [calling element]
+		 * @param {[object]} options [alloptions]
+		 */
 		setDatePicker : function(_this, options ){
 			var $datePicker = $("<div/>", {class: "datePicker"});
 
@@ -354,6 +461,11 @@
 				opacity:1
 			},300);
 		},
+
+		/**
+		 * [removeDatePicker removes datepicker]
+		 * @param  {[DOM element]} _this [calling element]
+		 */
 		removeDatePicker : function(_this){
 			$(_this).next('.datePicker').animate({
 				opacity:0
@@ -363,11 +475,16 @@
 		}
 	}
 
-	// Main function
+	/**
+	 * [datePick is main function]
+	 * @param  {[object]} options [options send by user]
+	 * @return {[DOM element]}         [returns datePicker]
+	 */
 	$.fn.datePick = function( options ){
 		var _this = this,
 		defaultOption = {
-          multipleDate : false
+          multipleDate : false,
+		  format: 'dd/mm/yy'	
         },
         allOptions = $.extend(defaultOption, options);
 

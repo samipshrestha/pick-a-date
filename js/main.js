@@ -4,8 +4,9 @@
 
 	var options = {
 		multipleDate : true,
-		// startDate: '25/2/2014',
-		// endDate: '1/2/2016'	
+		minDate: '8/12/2015',
+		maxDate: '8/2/2016',
+		// format: 'd MM, yy'	
 	}
 
 	$('#date').datePick(options);
