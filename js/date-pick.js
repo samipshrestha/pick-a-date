@@ -43,6 +43,23 @@
 			$table = AppendDate.setDates( $table, _this, options );
 			return $datePicker;
 		},
+
+		/**
+		 * [formatDate appends 0 in single integer number]
+		 * @param  {[string]} data [integer value to be checked]
+		 * @return {[string]}      [returns value with 0 prepended to single integers]
+		 */
+		formatDate : function(data){
+			if(data>=1 && data<=9){
+				data = '0'+ data;
+			}
+			return(data);
+		},
+
+		formattedDate : function(x,y,z,estring){
+			return(x+estring+y+estring+z);
+		},
+
 		/**
 		 * [getDateFormat description]
 		 * @param  {[DOM element]} that    [clicked date element]
@@ -55,41 +72,43 @@
 
 			if( options.format == 'dd/mm/yy' ){
 
-				if(fullDate[0]>=1 && fullDate[0]<=9){
-					fullDate[0] = '0'+ fullDate[0];
-				}
+				fullDate[0] = AppendDate.formatDate(fullDate[0]);
+				fullDate[1] = AppendDate.formatDate(fullDate[1]);
 
-				if(fullDate[1]>=1 && fullDate[1]<=9){
-					fullDate[1] = '0'+ fullDate[1];
-				}
-				dateFormat = fullDate[0] + '/' + fullDate[1] + '/' + fullDate[2];
+				dateFormat = AppendDate.formattedDate( fullDate[0], fullDate[1], fullDate[2],'/' );
 				return dateFormat;
 			}
 
 			else if( options.format == 'mm/dd/yy' ){
-				if(fullDate[0]>=1 && fullDate[0]<=9){
-					fullDate[0] = '0'+ fullDate[0];
-				}
+				fullDate[0] = AppendDate.formatDate(fullDate[0]);
+				fullDate[1] = AppendDate.formatDate(fullDate[1]);
 
-				if(fullDate[1]>=1 && fullDate[1]<=9){
-					fullDate[1] = '0'+ fullDate[1];
-				}
+				dateFormat = AppendDate.formattedDate( fullDate[1], fullDate[0], fullDate[2], '/' );
+				return dateFormat;
+			}
 
-				dateFormat = fullDate[1] + '/' + fullDate[0] + '/' + fullDate[2]  ;
+			else if( options.format == 'dd-mm-yy' ){
+				fullDate[0] = AppendDate.formatDate(fullDate[0]);
+				fullDate[1] = AppendDate.formatDate(fullDate[1]);
+
+				dateFormat = AppendDate.formattedDate( fullDate[0], fullDate[1], fullDate[2], '-' );
+				return dateFormat;
+			}
+
+			else if( options.format == 'mm-dd-yy' ){
+				fullDate[0] = AppendDate.formatDate(fullDate[0]);
+				fullDate[1] = AppendDate.formatDate(fullDate[1]);
+
+				dateFormat = AppendDate.formattedDate( fullDate[1], fullDate[0], fullDate[2], '-' );
 				return dateFormat;
 			}
 
 			else if( options.format == 'yy-mm-dd' ){
 
-				if(fullDate[0]>=1 && fullDate[0]<=9){
-					fullDate[0] = '0'+ fullDate[0];
-				}
+				fullDate[0] = AppendDate.formatDate(fullDate[0]);
+				fullDate[1] = AppendDate.formatDate(fullDate[1]);
 
-				if(fullDate[1]>=1 && fullDate[1]<=9){
-					fullDate[1] = '0'+ fullDate[1];
-				}
-
-				dateFormat = fullDate[2] + '-' + fullDate[1] + '-' + fullDate[0]  ;
+				dateFormat = AppendDate.formattedDate( fullDate[2], fullDate[1], fullDate[0], '-' );
 				return dateFormat;
 			}
 
@@ -188,6 +207,62 @@
 		},
 
 		/**
+		 * [checkForMinDate checks for minimum date limit]
+		 * @param  {[DOM element]} $element      [date element]
+		 * @param  {[int]} year          [year]
+		 * @param  {[int]} month         [month]
+		 * @param  {[int]} date          [date]
+		 * @param  {[array]} fullStartDate [full start date in array]
+		 * @return {[DOM element]}               [element with object class]
+		 */
+		checkForMinDate : function($element, year, month, date, fullStartDate){
+			if( year < fullStartDate[2] ){
+				$element.addClass('disabled');
+			}
+
+			else if( year == fullStartDate[2] ){
+				if( month < fullStartDate[1] ){
+					$element.addClass('disabled');
+				}
+
+				else if( month == fullStartDate[1] ){
+					if( date < fullStartDate[0] ){
+						$element.addClass('disabled');
+					}
+				}
+			}
+			return ($element);
+		},
+
+		/**
+		 * [checkForMaxDate checks for maximum date limit]
+		 * @param  {[DOM element]} $element    [date element]
+		 * @param  {[int]} year        [year]
+		 * @param  {[int]} month       [month]
+		 * @param  {[int]} date        [date]
+		 * @param  {[array]} fullEndDate [full end date in array]]
+		 * @return {[DOM element]}             [element with object class]
+		 */
+		checkForMaxDate : function($element, year, month, date, fullEndDate){
+			if( year > fullEndDate[2] ){
+				$element.addClass('disabled');
+			}
+
+			else if( year == fullEndDate[2] ){
+				if( month > fullEndDate[1] ){
+					$element.addClass('disabled');
+				}
+
+				else if( month == fullEndDate[1] ){
+					if( date > fullEndDate[0] ){
+						$element.addClass('disabled');
+					}
+				}
+			}
+			return ($element);
+		},
+
+		/**
 		 * [setDates sets dates in datePicker]
 		 * @param {[DOM elmemt]} $table  [table in which dates are to be set]
 		 * @param {[DOM element]} _this   [calling elemnt]
@@ -230,41 +305,13 @@
 							// For Start Date
 							if( options.minDate )
 							{
-								if( prevYear < fullStartDate[2] ){
-									$prevMonthDate.addClass('disabled');
-								}
-
-								else if( prevYear == fullStartDate[2] ){
-									if( prevMonth < fullStartDate[1] ){
-										$prevMonthDate.addClass('disabled');
-									}
-
-									else if( prevMonth == fullStartDate[1] ){
-										if( (parseInt(previousMonthTotalDate)-k) < fullStartDate[0] ){
-											$prevMonthDate.addClass('disabled');
-										}
-									}
-								}
+								$prevMonthDate = AppendDate.checkForMinDate( $prevMonthDate, prevYear, prevMonth, (parseInt(previousMonthTotalDate)-k), fullStartDate );
 							}
 
 							// For End date
 							if( options.maxDate )
 							{
-								if( prevYear > fullEndDate[2] ){
-									$prevMonthDate.addClass('disabled');
-								}
-
-								else if( prevYear == fullEndDate[2] ){
-									if( prevMonth > fullEndDate[1] ){
-										$prevMonthDate.addClass('disabled');
-									}
-
-									else if( prevMonth == fullEndDate[1] ){
-										if( (parseInt(previousMonthTotalDate)-k) > fullEndDate[0] ){
-											$prevMonthDate.addClass('disabled');
-										}
-									}
-								}
+								$prevMonthDate = AppendDate.checkForMaxDate( $prevMonthDate, prevYear, prevMonth, (parseInt(previousMonthTotalDate)-k), fullEndDate );
 							}
 
 							$prevMonthDate.attr('date-value', (parseInt(previousMonthTotalDate)-k) + '/' + (prevMonth) + '/' + prevYear);
@@ -297,41 +344,13 @@
 							// For Start Date
 							if( options.minDate )
 							{
-								if( nextYear < fullStartDate[2] ){
-									$nextMonthDate.addClass('disabled');
-								}
-
-								else if( nextYear == fullStartDate[2] ){
-									if( nextMonth < fullStartDate[1] ){
-										$nextMonthDate.addClass('disabled');
-									}
-
-									else if( nextMonth == fullStartDate[1] ){
-										if( count < fullStartDate[0] ){
-											$nextMonthDate.addClass('disabled');
-										}
-									}
-								}
+								$nextMonthDate = AppendDate.checkForMinDate( $nextMonthDate, nextYear, nextMonth, count, fullStartDate);
 							}
 
 							// For End date
 							if( options.maxDate )
 							{
-								if( nextYear > fullEndDate[2] ){
-									$nextMonthDate.addClass('disabled');
-								}
-
-								else if( nextYear == fullEndDate[2] ){
-									if( nextMonth > fullEndDate[1] ){
-										$nextMonthDate.addClass('disabled');
-									}
-
-									else if( nextMonth == fullEndDate[1] ){
-										if( count > fullEndDate[0] ){
-											$nextMonthDate.addClass('disabled');
-										}
-									}
-								}
+								$nextMonthDate = AppendDate.checkForMaxDate( $nextMonthDate, nextYear, nextMonth, count, fullEndDate );
 							}
 
 							$nextMonthDate.attr('date-value', (count + '/' + (nextMonth) + '/' + nextYear));
@@ -366,41 +385,13 @@
 					// For Start Date
 					if( options.minDate )
 					{
-						if( currentYear < fullStartDate[2] ){
-							$td.addClass('disabled');
-						}
-
-						else if( currentYear == fullStartDate[2] ){
-							if( (parseInt(currentMonth)+1) < fullStartDate[1] ){
-								$td.addClass('disabled');
-							}
-
-							else if( (parseInt(currentMonth)+1) == fullStartDate[1] ){
-								if( i < fullStartDate[0] ){
-									$td.addClass('disabled');
-								}
-							}
-						}
+						$td = AppendDate.checkForMinDate( $td, currentYear, (parseInt(currentMonth)+1), i ,fullStartDate );
 					}
 
 					// For End date
 					if( options.maxDate )
 					{
-						if( currentYear > fullEndDate[2] ){
-							$td.addClass('disabled');
-						}
-
-						else if( currentYear == fullEndDate[2] ){
-							if( (parseInt(currentMonth)+1) > fullEndDate[1] ){
-								$td.addClass('disabled');
-							}
-
-							else if( (parseInt(currentMonth)+1) == fullEndDate[1] ){
-								if( i > fullEndDate[0] ){
-									$td.addClass('disabled');
-								}
-							}
-						}
+						$td = AppendDate.checkForMaxDate( $td, currentYear, (parseInt(currentMonth)+1), i ,fullEndDate );
 					}
 
 					$td.attr('date-value', i + '/' + (parseInt(currentMonth)+1) + '/' + currentYear);

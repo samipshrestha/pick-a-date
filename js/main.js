@@ -4,8 +4,9 @@
 
 	var options = {
 		multipleDate : true,
-		minDate: '8/12/2015',
-		maxDate: '8/2/2016',
+		minDate: '8/10/2015',
+		maxDate: '8/3/2016',
+		format : 'mm-dd-yy'
 		// format: 'd MM, yy'	
 	}
 
