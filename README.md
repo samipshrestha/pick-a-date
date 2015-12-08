@@ -50,6 +50,6 @@ FEATURES
 		Animation 
 			There are two animations available for selection
 				1.bounceIn
-				2.flipInY (default)
+				2.flipInY
 
 
