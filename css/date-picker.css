@@ -1,0 +1,121 @@
+*:after{
+	clear: both;
+	content: '';
+	display: block;
+}
+
+table{
+	border-collapse: collapse;
+}
+
+.datePicker{
+	width: 276px;
+	height: 330px;
+	background: #fff;
+	position: absolute;
+	border-radius: 4px;
+	margin-top: 4px; 
+	opacity: 0;
+	-webkit-box-shadow: 1px 1px 4px 1px #7f8c8d;
+	box-shadow: 1px 1px 4px 1px #7f8c8d;
+}
+
+.datePicker table{
+	margin: 0 auto;
+}
+
+.datePicker .calendar-heading{
+	padding: 10px;
+	background: #D1D4D5;
+}
+
+.datePicker .calendar-heading .prev{
+	float: left;
+	height: 30px;
+	padding: 10px;
+	background: url(../images/btn-prev.png) no-repeat center;
+	background-size: 10px 14px;
+	border-radius: 4px;
+	cursor: pointer;
+	-webkit-transition: all 0.3s ease-in-out;
+	-o-transition: all 0.3s ease-in-out;
+	transition: all 0.3s ease-in-out;
+}
+
+.datePicker .calendar-heading .prev:hover{
+	background-color: #7f8c8d;
+}
+
+.datePicker .month-title{
+	padding: 4px;
+	width: 216px;
+	color: #FDFFFF;
+	text-align: center;
+	float: left;
+	font: 16px 'robotobold',sans-serif,arial;
+}
+
+.datePicker .calendar-heading .next{
+	float: right;
+	height: 30px;
+	padding: 10px;
+	background: url(../images/btn-next.png) no-repeat center;
+	background-size: 10px 14px;
+	border-radius: 4px;
+	cursor: pointer;
+	-webkit-transition: all 0.3s ease-in-out;
+	-o-transition: all 0.3s ease-in-out;
+	transition: all 0.3s ease-in-out;
+}
+
+.datePicker .calendar-heading .next:hover{
+	background-color: #7f8c8d;
+}
+
+.datePicker .datePicker-calendar tr th{
+	height: 20px;
+	width: 20px;
+	padding: 10px;
+	font: 14px/20px 'robotobold',sans-serif,arial;
+}
+
+.datePicker .datePicker-calendar tr td{
+	height: 20px;
+	width: 20px;
+	padding: 10px;
+	text-align: center;
+	cursor: pointer;
+	font: 14px/20px 'robotoregular',sans-serif,arial;
+	color: #020202;
+	border-radius: 4px;
+}
+
+.datePicker .datePicker-calendar tr td.today{
+	color: #ecf0f1;
+	background: #16a085;
+}
+
+.datePicker .datePicker-calendar tr td.prev-month-date{
+	color: #95a5a6;
+}
+
+.datePicker .datePicker-calendar tr td.next-month-date{
+	color: #95a5a6;
+}
+
+.datePicker .datePicker-calendar tr td.disabled{
+	cursor: not-allowed;
+	color: #D8D6D6;
+}
+
+.datePicker .datePicker-calendar tr td:hover{
+	color: #ecf0f1;
+	background: #2980b9;
+	-webkit-transition: all 0.3s ease-in-out;
+	-o-transition: all 0.3s ease-in-out;
+	transition: all 0.3s ease-in-out;
+}
+
+.datePicker .datePicker-calendar .red{
+	color: #c0392b;
+}
