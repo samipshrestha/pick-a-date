@@ -23,21 +23,20 @@ Its a date picker with custom options
 			headingBackground: '#223922',
 			bodyBackground: '#796423'
 		}
-
-		$('#yourSelector').datePick(options);
+	$('#yourSelector').datePick(options);
 
 	The different types of feature are:
 
-		- **Multiple Date** 
+		- ** Multiple Date ** 
 			If set to true you can select multiple date from date picker.
 
-		- **Minimum Date** 
+		- Minimum Date 
 			If defined the date older than the minimum dates are disabled.
 
-		- **Maximum Date** 
+		- Maximum Date 
 			If defined the date later than the maximum dates are disabled.
 
-		- **Date formats**
+		- Date formats
 			You can get different types of date format by passing the argument format. 
 			The different types of available date format are:
 
@@ -57,12 +56,12 @@ Its a date picker with custom options
 		- Heading Background color
 			You can change the heading background color of datepicker by passing the option. 
 
-			**headingBackground : your colour code**
+			headingBackground : your colour code
 
 		- Body Background color
 
 			You can change the body background color of datepicker by passing the option. 
 
-				**bodyBackground : your colour code**
+				bodyBackground : your colour code
 
 
