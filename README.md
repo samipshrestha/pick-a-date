@@ -52,19 +52,19 @@ Its a date picker with custom options
 		6. d M, yy  (8 Feb, 2016)
 		7. d MM, yy (8 February, 2016)
 
-	- Animation 
+	- *Animation* 
 	
 		There are two animations available for selection
 		1. **bounceIn**
 		2. **flipInY**
 
-	- Heading Background color
+	- *Heading Background color*
 	
 		You can change the heading background color of datepicker by passing the option. 
 
 		**headingBackground : your colour code**
 
-	- Body Background color
+	- *Body Background color*
 
 		You can change the body background color of datepicker by passing the option. 
 
