@@ -9,7 +9,7 @@
 		// format : 'mm.dd-yy',
 		animation: 'flipInY',
 		headingBackground: '#223922',
-		bodyBackground: '#796423'
+		bodyBackground: '#796423',
 		format: 'd MM, yy'	
 	}
 
