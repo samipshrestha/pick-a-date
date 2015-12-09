@@ -24,12 +24,12 @@ table{
 	margin: 0 auto;
 }
 
-.calendar-heading{
+.datePicker .calendar-heading{
 	padding: 10px;
 	background: #D1D4D5;
 }
 
-.calendar-heading .prev{
+.datePicker .calendar-heading .prev{
 	float: left;
 	height: 30px;
 	padding: 10px;
@@ -42,11 +42,11 @@ table{
 	transition: all 0.3s ease-in-out;
 }
 
-.calendar-heading .prev:hover{
+.datePicker .calendar-heading .prev:hover{
 	background-color: #7f8c8d;
 }
 
-.month-title{
+.datePicker .month-title{
 	padding: 4px;
 	width: 216px;
 	color: #FDFFFF;
@@ -55,7 +55,7 @@ table{
 	font: 16px 'robotobold',sans-serif,arial;
 }
 
-.calendar-heading .next{
+.datePicker .calendar-heading .next{
 	float: right;
 	height: 30px;
 	padding: 10px;
@@ -68,18 +68,18 @@ table{
 	transition: all 0.3s ease-in-out;
 }
 
-.calendar-heading .next:hover{
+.datePicker .calendar-heading .next:hover{
 	background-color: #7f8c8d;
 }
 
-.datePicker-calendar tr th{
+.datePicker .datePicker-calendar tr th{
 	height: 20px;
 	width: 20px;
 	padding: 10px;
 	font: 14px/20px 'robotobold',sans-serif,arial;
 }
 
-.datePicker-calendar tr td{
+.datePicker .datePicker-calendar tr td{
 	height: 20px;
 	width: 20px;
 	padding: 10px;
@@ -90,25 +90,25 @@ table{
 	border-radius: 4px;
 }
 
-.datePicker-calendar tr td.today{
+.datePicker .datePicker-calendar tr td.today{
 	color: #ecf0f1;
 	background: #16a085;
 }
 
-.datePicker-calendar tr td.prev-month-date{
+.datePicker .datePicker-calendar tr td.prev-month-date{
 	color: #95a5a6;
 }
 
-.datePicker-calendar tr td.next-month-date{
+.datePicker .datePicker-calendar tr td.next-month-date{
 	color: #95a5a6;
 }
 
-.datePicker-calendar tr td.disabled{
+.datePicker .datePicker-calendar tr td.disabled{
 	cursor: not-allowed;
 	color: #D8D6D6;
 }
 
-.datePicker-calendar tr td:hover{
+.datePicker .datePicker-calendar tr td:hover{
 	color: #ecf0f1;
 	background: #2980b9;
 	-webkit-transition: all 0.3s ease-in-out;
@@ -116,6 +116,6 @@ table{
 	transition: all 0.3s ease-in-out;
 }
 
-.datePicker-calendar .red{
+.datePicker .datePicker-calendar .red{
 	color: #c0392b;
 }
