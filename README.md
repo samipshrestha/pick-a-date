@@ -55,8 +55,8 @@ Its a date picker with custom options
 		- Animation 
 		
 			There are two animations available for selection
-				1. *bounceIn*
-				2. *flipInY*
+				1. bounceIn
+				2. flipInY
 
 		- Heading Background color
 		
