@@ -37,7 +37,7 @@
 		 * @param {[object]} options     [all options]
 		 */
 		setTable : function( $datePicker, _this, options ){
-			var $table = $("<table/>", {class: "datePicker-calendar",});
+			var $table = $("<table/>", {class: "datePicker-calendar"});
 			$datePicker.append($table);
 			$table = AppendDate.setDays( $table );
 			$table = AppendDate.setDates( $table, _this, options );
@@ -76,7 +76,6 @@
 				fullDate[1] = AppendDate.formatDate(fullDate[1]);
 
 				dateFormat = AppendDate.formattedDate( fullDate[0], fullDate[1], fullDate[2],'/' );
-				return dateFormat;
 			}
 
 			else if( options.format == 'mm/dd/yy' ){
@@ -84,7 +83,6 @@
 				fullDate[1] = AppendDate.formatDate(fullDate[1]);
 
 				dateFormat = AppendDate.formattedDate( fullDate[1], fullDate[0], fullDate[2], '/' );
-				return dateFormat;
 			}
 
 			else if( options.format == 'dd-mm-yy' ){
@@ -92,7 +90,6 @@
 				fullDate[1] = AppendDate.formatDate(fullDate[1]);
 
 				dateFormat = AppendDate.formattedDate( fullDate[0], fullDate[1], fullDate[2], '-' );
-				return dateFormat;
 			}
 
 			else if( options.format == 'mm-dd-yy' ){
@@ -100,7 +97,6 @@
 				fullDate[1] = AppendDate.formatDate(fullDate[1]);
 
 				dateFormat = AppendDate.formattedDate( fullDate[1], fullDate[0], fullDate[2], '-' );
-				return dateFormat;
 			}
 
 			else if( options.format == 'yy-mm-dd' ){
@@ -109,25 +105,21 @@
 				fullDate[1] = AppendDate.formatDate(fullDate[1]);
 
 				dateFormat = AppendDate.formattedDate( fullDate[2], fullDate[1], fullDate[0], '-' );
-				return dateFormat;
 			}
 
 			else if( options.format == 'd M, yy' ){
 				dateFormat = fullDate[0] + ' ' + monthsLabelsMin[ parseInt( fullDate[1] ) - 1]  + ', ' + fullDate[2]  ;
-				return dateFormat;
 			}
 
 			else if( options.format == 'd MM, yy' ){
 				dateFormat = fullDate[0] + ' ' + monthsLabels[ parseInt( fullDate[1] ) - 1]  + ', ' + fullDate[2]  ;
-				return dateFormat;
 			}
 
 			else{
-				console.log('The defined date format is not supported.');
-				dateFormat = '';
-				return dateFormat;
+				jQuery.error('The defined date format is not supported ' + options.format + ' .');
 			}
 
+			return dateFormat;
 		},
 		/**
 		 * [setValue returns value to calling element]
@@ -170,6 +162,10 @@
 			$headingWrapper.append($prevDiv);
 			$headingWrapper.append($monthDiv);
 			$headingWrapper.append($nextDiv);
+
+			$headingWrapper.css({
+				background: options.headingBackground
+			})
 
 			$nextDiv.click(function(e){
 				$datePicker.empty();
@@ -447,6 +443,10 @@
 			$datePicker = AppendDate.setTable($datePicker, _this, options);
 
 			$datePicker.addClass('animated ' + options.animation);
+			$datePicker.css({
+				background: options.bodyBackground
+			});
+
 			$datePicker.insertAfter($(_this));
 			$(_this).parent().css({
 				position: 'relative'
@@ -480,7 +480,9 @@
 		defaultOption = {
           multipleDate : false,
 		  format: 'dd/mm/yy',
-		  animation: 'flipInY'	
+		  animation: '',
+		  headingBackground: '#D1D4D5',
+		  bodyBackground: '#fff'	
         },
         allOptions = $.extend(defaultOption, options);
 
